@@ -244,6 +244,15 @@ public class Plume<VarType, ValType> {
                         if (writeNode.canReachByCO(node)) {
                             // there are 3 cases: initReadMono initReadWR or writeCOInitRead
                             boolean findSubTap = false;
+                            var edges = graph.getEdge(writeNode, node);
+                            if (edges != null) {
+                                for (var edge: edges) {
+                                    if (edge.getType() == Edge.Type.SO) {
+                                        findTAP(TAP.FracturedReadCO);
+                                        findSubTap = true;
+                                    }
+                                }
+                            }
                             for (var writeY : writeNode.getTransaction().getOps()) {
                                 for (var readY : node.getTransaction().getOps()) {
                                     if (!writeY.getVariable().equals(read.getVariable()) &&
